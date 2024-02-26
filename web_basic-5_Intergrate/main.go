@@ -5,10 +5,10 @@ import (
 	cx "github.com/codingXiang/cxgateway/delivery/http"
 	"github.com/codingXiang/go-logger"
 	"github.com/codingXiang/go-orm"
-	"github.com/ian60509/golang-web-exercise/web_basic-5_intergrate/model"
-	"github.com/ian60509/golang-web-exercise/web_basic-5_intergrate/module/user/delivery/http"
-	"github.com/ian60509/golang-web-exercise/web_basic-5_intergrate/module/user/repository"
-	repository2 "github.com/ian60509/golang-web-exercise/web_basic-5_intergrate/module/user/service"
+	"github.com/ian60509/golang-web-exercise/web_basic-5_Intergrate/model"
+	"github.com/ian60509/golang-web-exercise/web_basic-5_Intergrate/module/user/delivery/http"
+	"github.com/ian60509/golang-web-exercise/web_basic-5_Intergrate/module/user/repository"
+	repository2 "github.com/ian60509/golang-web-exercise/web_basic-5_Intergrate/module/user/service"
 )
 
 func init () {

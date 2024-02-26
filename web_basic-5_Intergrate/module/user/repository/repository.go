@@ -3,8 +3,8 @@ package repository
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/ian60509/golang-web-exercise/web_basic-5_intergrate/model"
-	"github.com/ian60509/golang-web-exercise/web_basic-5_intergrate/module/user"
+	"github.com/ian60509/golang-web-exercise/web_basic-5_Intergrate/model"
+	"github.com/ian60509/golang-web-exercise/web_basic-5_Intergrate/module/user"
 )
 
 type UserRepository struct {

@@ -10,9 +10,9 @@ import (
 	"github.com/codingXiang/cxgateway/pkg/util"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
-	"github.com/ian60509/golang-web-exercise/web_basic-5_intergrate/model"
-	"github.com/ian60509/golang-web-exercise/web_basic-5_intergrate/module/user"
-	"github.com/ian60509/golang-web-exercise/web_basic-5_intergrate/module/user/delivery"
+	"github.com/ian60509/golang-web-exercise/web_basic-5_Intergrate/model"
+	"github.com/ian60509/golang-web-exercise/web_basic-5_Intergrate/module/user"
+	"github.com/ian60509/golang-web-exercise/web_basic-5_Intergrate/module/user/delivery"
 )
 
 const (
