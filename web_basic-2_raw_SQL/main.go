@@ -7,10 +7,10 @@ import (
 )
 
 const (
-	USERNAME = "root"
-	PASSWORD = "22387681"
+	USERNAME = "demo" //資料庫使用者名稱
+	PASSWORD = "demo123"
 	NETWORK = "tcp"
-	SERVER = "127.0.0.2"
+	SERVER = "127.0.0.1"
 	PORT = 3306
 	DATABASE = "demo"
 )
@@ -50,7 +50,7 @@ func CreateTable(db *sql.DB) error {
         password VARCHAR(64)
 		); `
 
-	if _, err := db.Exec(sql); err != nil {
+	if _, err := db.Exec(sql); err != nil { //讓db.Exec( )執行SQL語句
 		fmt.Println("建立資料表發生錯誤，原因為：", err)
 		return err
 	}
@@ -59,7 +59,7 @@ func CreateTable(db *sql.DB) error {
 }
 
 func InsertUser(db *sql.DB, username, pwd string) error {
-	_,err := db.Exec("insert INTO users(username,password) values(?,?)",username, pwd) //插入一組 username, password 的資料
+	_,err := db.Exec("insert INTO users(username,password) values(?,?)",username, pwd) //插入一組 username, password 的資料，利用?作為placeholder
 
 	if err != nil {
 		fmt.Println("新增使用者發生錯誤，原因為：", err)
