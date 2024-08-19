@@ -9,6 +9,8 @@ import (
 
 	"user_server/model"
 	"user_server/module/delivery"
+	"user_server/module/service"
+	"user_server/module/repository"
 )
 
 const ( //database connection info 
@@ -40,7 +42,9 @@ func initDB() {
 func main() {
 	initDB()
 
-	userHandler := delivery.NewUserHandler() //建立一個 userHandler struct
+	userRepo := repository.NewUserRepository(DB) //建立一個 userRepo struct
+	userService := service.NewUserService(userRepo) //建立一個 userService struct
+	userHandler := delivery.NewUserHandler(userService) //建立一個 userHandler struct
 
 	server := gin.Default()
 	userRoutes := server.Group("/user") //擁有相同prefix、middleware的routing group

@@ -4,14 +4,17 @@ import (
 	"net/http"
 	"github.com/gin-gonic/gin"
 	"user_server/model"
+	"user_server/module/service"
 )
 
 type UserHandler struct {
-	// service service.UserService
+	service service.UserService
 }
 
-func NewUserHandler() *UserHandler { //帶有各個很多 method 的 struct
-	return &UserHandler{}
+func NewUserHandler(service service.UserService) *UserHandler { //帶有各個很多 method 的 struct
+	return &UserHandler{
+		service: service,
+	}
 }
 
 // ----------------------- method -----------------------------------
