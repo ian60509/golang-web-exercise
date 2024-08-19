@@ -1,6 +1,7 @@
 package service
 
 import (
+	"fmt"
 	"user_server/model"
 	"user_server/module/repository"
 )
@@ -9,8 +10,9 @@ type UserService interface {
 	Create(user *model.User) error
 	GetAllUsers() ([]model.User, error)
 	GetUserById(id int) (model.User, error)
+	GetUserByName(name string) (model.User, error)
 	UpdateUser(user *model.User) error
-	DeleteUser(user *model.User) error
+	DeleteUser(name string) error
 }
 
 func NewUserService(repo repository.UserRepository) UserService {
@@ -37,14 +39,20 @@ func (s *userService) GetUserById(id int) (model.User, error) {
 	return s.repo.GetById(id)
 }
 
+func (s *userService) GetUserByName(name string) (model.User, error) {
+	return s.repo.GetByName(name)
+}
+
 func (s *userService) UpdateUser(user *model.User) error {
 	return s.repo.Update(user)
 }
 
-func (s *userService) DeleteUser(user *model.User) error {
-	_, err := s.repo.GetById(int(user.ID))
+func (s *userService) DeleteUser(name string) error {
+	user, err := s.repo.GetByName(name)
 	if err != nil {
 		return err
+	} else {
+		fmt.Println("Delete user, get user by name, user.ID:", user.ID, "   user.Name:", user.Name)
 	}
-	return s.repo.Delete(user)
+	return s.repo.Delete(&user)
 }

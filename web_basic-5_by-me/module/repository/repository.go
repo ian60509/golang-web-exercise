@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"gorm.io/gorm"
 	"user_server/model"
 )
@@ -9,6 +10,7 @@ type UserRepository interface {
 	Create (user *model.User) error
 	GetAll () ([]model.User, error)
 	GetById (id int) (model.User, error)
+	GetByName (name string) (model.User, error)
 	Update (user *model.User) error
 	Delete (user *model.User) error
 }
@@ -40,11 +42,19 @@ func (r *userRepository) GetById(id int) (model.User, error) {
 	return user, err
 }
 
+func (r *userRepository) GetByName(name string) (model.User, error) {
+	var user model.User
+	err := r.db.Where("name = ?", name).First(&user).Error
+	return user, err
+}
+
 func (r *userRepository) Update(user *model.User) error {
 	return r.db.Save(user).Error
 }
 
 func (r *userRepository) Delete(user *model.User) error {
-	return r.db.Delete(user).Error
+	fmt.Println("Service.Delete user: ", user)
+	err := r.db.Delete(user).Error
+	return err
 }
 

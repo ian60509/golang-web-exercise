@@ -74,6 +74,15 @@ func (suite *UserRepositoryTestSuite) TestGetByID() {
     assert.Equal(suite.T(), user.Email, retrievedUser.Email)
 }
 
+func (suite *UserRepositoryTestSuite) TestGetByName() {
+    user := &model.User{Name: "John Doe"}
+    suite.repo.Create(user)
+
+    retrievedUser, err := suite.repo.GetByName(user.Name)
+    assert.NoError(suite.T(), err)
+    assert.Equal(suite.T(), user.Name, retrievedUser.Name)
+}
+
 func (suite *UserRepositoryTestSuite) TestUpdate() {
     user := &model.User{Name: "John Doe", Email: "john@example.com"}
     suite.repo.Create(user)

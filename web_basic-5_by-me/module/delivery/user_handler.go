@@ -1,6 +1,7 @@
 package delivery
 
 import (
+	"fmt"
 	"net/http"
 	"github.com/gin-gonic/gin"
 	"user_server/model"
@@ -28,17 +29,31 @@ func (h *UserHandler)HealthCheck(c *gin.Context) {
 func (h *UserHandler) GetUser(c *gin.Context) {
 	name := c.Param("name")
 	// Fetch user data from database or any other source
-	c.JSON(http.StatusOK, "get user name=" + name)
+	user, GetUserErr := h.service.GetUserByName(name)
+	if GetUserErr != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": GetUserErr.Error()})
+	}
+	c.JSON(http.StatusOK, user)
 }
 
 func (h *UserHandler) CreateUser(c *gin.Context) {
 	var user model.User
+	
+	// 從 request 的 JSON 中解析成 user struct
 	if err := c.ShouldBindJSON(&user); err != nil {
+		fmt.Println("Bind JSON error: ", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	// Create user in database or any other source
-	c.JSON(http.StatusOK, "create user" + user.Name)
+
+	CretaeErr := h.service.Create(&user)
+	if CretaeErr != nil {
+		fmt.Println("Create user error: ", CretaeErr)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": CretaeErr.Error()})
+		return
+	}
+	
+	c.JSON(http.StatusOK, "create user: " + user.Name)
 }
 
 func (h *UserHandler) UpdateUser(c *gin.Context) {
@@ -47,12 +62,23 @@ func (h *UserHandler) UpdateUser(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
-	// Update user in database or any other source
+	
+	UpdateErr := h.service.UpdateUser(&user)
+	if UpdateErr != nil {
+		fmt.Println("Update user error: ", UpdateErr)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": UpdateErr.Error()})
+		return
+	}
 	c.JSON(http.StatusOK, "update user" + user.Name)
 }
 
 func (h *UserHandler) DeleteUser(c *gin.Context) {
 	name := c.Param("name")
 	// Delete user from database or any other source
+
+	DeleteErr := h.service.DeleteUser(name)
+	if DeleteErr != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": DeleteErr.Error()})
+	}
 	c.JSON(http.StatusOK, "delete user name=" + name)
 }
