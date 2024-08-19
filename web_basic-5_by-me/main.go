@@ -1,13 +1,14 @@
 package main
 
 import (
+	"fmt"
+
+	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql" // gorm 提供的 mysql driver
 	"gorm.io/gorm"
-	"fmt"
-	"net/http"
-	"github.com/gin-gonic/gin"
 
 	"user_server/model"
+	"user_server/module/delivery"
 )
 
 const ( //database connection info 
@@ -21,7 +22,7 @@ const ( //database connection info
 
 var DB *gorm.DB
 
-func init() {
+func initDB() {
 	dsn := fmt.Sprintf("%s:%s@%s(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",USERNAME,PASSWORD,NETWORK,SERVER,PORT,DATABASE)
 	DB, err := gorm.Open(mysql.Open(dsn), &gorm.Config{}) //開啟資料庫連線 
 	if err != nil {
@@ -37,53 +38,21 @@ func init() {
 }
 
 func main() {
+	initDB()
+
+	userHandler := delivery.NewUserHandler() //建立一個 userHandler struct
+
 	server := gin.Default()
 	userRoutes := server.Group("/user") //擁有相同prefix、middleware的routing group
 	{
-		userRoutes.GET("/:name", getUser)
-		userRoutes.POST("", createUser)
-		userRoutes.PUT("", updateUser)
-		userRoutes.DELETE("/:name", deleteUser)
+		userRoutes.GET("/:name", userHandler.GetUser)
+		userRoutes.POST("", userHandler.CreateUser)
+		userRoutes.PUT("", userHandler.UpdateUser)
+		userRoutes.DELETE("/:name", userHandler.DeleteUser)
 	}
-	server.GET("/", healthCheck)
+	server.GET("/", userHandler.HealthCheck)
 	server.Run(":8080")
 
 }
 
-func healthCheck(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"status": "ok",
-	})
-}
 
-func getUser(c *gin.Context) {
-	name := c.Param("name")
-	// Fetch user data from database or any other source
-	c.JSON(http.StatusOK, "get user name=" + name)
-}
-
-func createUser(c *gin.Context) {
-	var user model.User
-	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	// Create user in database or any other source
-	c.JSON(http.StatusOK, "create user" + user.Name)
-}
-
-func updateUser(c *gin.Context) {
-	var user model.User
-	if err := c.ShouldBindJSON(&user); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-	// Update user in database or any other source
-	c.JSON(http.StatusOK, "update user" + user.Name)
-}
-
-func deleteUser(c *gin.Context) {
-	name := c.Param("name")
-	// Delete user from database or any other source
-	c.JSON(http.StatusOK, "delete user name=" + name)
-}
